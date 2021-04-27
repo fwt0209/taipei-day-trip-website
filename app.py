@@ -9,7 +9,7 @@ mydb = mysql.connector.connect(
   ,auth_plugin="mysql_native_password"
 )
 
-mycursor = mydb.cursor(dictionary=True)
+mycursor = mydb.cursor(dictionary=True, buffered=True)
 
 app=Flask(__name__)
 app.config["JSON_AS_ASCII"]=False
@@ -51,38 +51,39 @@ def apiGetAttractionsByPage():
 
 	limit=12
 	keyword=request.args.get('keyword')
-	total=countData(keyword)
-	page=int(request.args.get('page'))
-	values["keyword"]=keyword
-	# values["keyword"]=f"%{keyword}%"
-	values["startIndex"]=(page-1)*limit
-	values["endIndex"]=page*limit
-	values["items"]=limit
+	v=(keyword,)
+	selectSQL="SELECT COUNT(1) count FROM attractions WHERE category=%s "
+	SQL=selectSQL
+	mycursor.execute(SQL, v)
+	result=mycursor.fetchone() 
+	total=result["count"]
+	print(total)
 
-	if values["endIndex"]<total:
+	page=int(request.args.get('page'))
+	startIndex=(page-1)*limit
+	endIndex=page*limit
+	items=limit
+	values=(keyword,startIndex,items)
+
+	if endIndex<total:
 		output["next"]={
 			"page":page+1,
 			"limit":limit
 		}
 
-	if values["startIndex"]>0:
+	if startIndex>0:
 		output["previous"]={
 			"page":page-1,
 			"limit":limit
 		}
 
-	selectAllAttractions=("SELECT atrac.*,  atracFile.picturePath "+
-	"FROM attractions atrac "+
-	"LEFT JOIN attractionFiles atracFile on atracFile.attraction_id=atrac.serial_no ")
-	# whereKeyword="WHERE stitle LIKE %(keyword)s "
-	whereKeyword="WHERE cat2=%(keyword)s "
-	pagination="ORDER BY MRT DESC LIMIT %(startIndex)s, %(items)s "
+	selectAllAttractions="SELECT atrac.*,  atracFile.path FROM attractions atrac LEFT JOIN attractionFiles atracFile on atracFile.attraction_id=atrac.serial_no WHERE category=%s ORDER BY MRT DESC LIMIT %s, %s "
 
-	SQL=selectAllAttractions + whereKeyword + pagination
+	SQL=selectAllAttractions
 
-	if not values["keyword"]:
-		SQL=selectAllAttractions + pagination
-		del values["keyword"]
+	if not keyword:
+		SQL="SELECT atrac.*,  atracFile.path FROM attractions atrac LEFT JOIN attractionFiles atracFile on atracFile.attraction_id=atrac.serial_no ORDER BY MRT DESC LIMIT %s, %s "
+		values=(startIndex,items)
 	
 	mycursor.execute(SQL, values)
 	print(mycursor.statement)
@@ -106,9 +107,10 @@ def apiGetAttractionsByID(attractionId):
 	"WHERE serial_no=%s")
 	values=(attractionId,)
 	mycursor.execute(SQL,values)
+	print(mycursor.statement)
 	result=mycursor.fetchone()
 	output["data"]=result
 	return output
 
 if __name__=="__main__":
-  app.run(host="0.0.0.0", port="3000")
+  app.run(port="3000")

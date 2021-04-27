@@ -11,7 +11,7 @@ mydb = mysql.connector.connect(
   auth_plugin="mysql_native_password"
 )
 
-mycursor = mydb.cursor(dictionary=True)
+mycursor = mydb.cursor(dictionary=True, buffered=True)
 
 def getAttractionList(data):  
   attractionsRawSource=data["result"]["results"]
@@ -23,19 +23,16 @@ def mapItems(data):
 def mapItemsCondition(data):
   fileList=getFileList(data["file"]) 
   return {
-    "info":data["info"],
-    "stitle":data["stitle"],
-    "longitude":data["longitude"],
-    "latitude":data["latitude"],
-    "MRT":data["MRT"],
     "serial_no":data["SERIAL_NO"],
-    "cat1":data["CAT1"],
-    "cat2":data["CAT2"],
-    "memo_time":data["MEMO_TIME"],
-    "idpt":data["idpt"],
-    "xbody":data["xbody"],
+    "name":data["stitle"],
+    "category":data["CAT2"],
+    "description":data["xbody"],
     "address":data["address"],
-    "file":fileList
+    "transport":data["info"],
+    "mrt":data["MRT"],
+    "latitude":data["latitude"],
+    "longitude":data["longitude"],
+    "images":fileList
     }
 
 def keepJpgPng(data):
@@ -66,31 +63,26 @@ def attractionsToDatabase(data):
     attraction_id = item["serial_no"]
     insertUpdateAttractionData(item)
     deleteAttractionFiles(attraction_id)
-    insertAttractionFiles(attraction_id, item["file"])
-
+    insertAttractionFiles(attraction_id, item["images"])
 
 
 def insertUpdateAttractionData(data):  
   insertSQL=("INSERT INTO attractions "
-  "(info, stitle, longitude, MRT, serial_no, cat1, cat2, memo_time, idpt, xbody, latitude, address) "
+  "(serial_no, name, category, description, address, transport, mrt, latitude, longitude) "
   "VALUES "
-  "(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)")
+  "(%s,%s,%s,%s,%s,%s,%s,%s,%s)")
   updateSQL=("ON DUPLICATE KEY UPDATE "
-  "info=%s, "
-  "stitle=%s, "
-  "longitude=%s, "
-  "MRT=%s, "
-  "cat1=%s, "
-  "cat2=%s, "
-  "memo_time=%s, "
-  "idpt=%s, "
-  "xbody=%s, "
-  "latitude=%s, "
+  "name=%s, "
+  "category=%s, "
+  "description=%s, "
   "address=%s, "
-  "updatedCounter=updatedCounter+1")
+  "transport=%s, "
+  "mrt=%s, "
+  "latitude=%s, "
+  "longitude=%s ")
   SQL = insertSQL + updateSQL
-  insertValues=(data["info"], data["stitle"], data["longitude"], data["MRT"], data["serial_no"], data["cat1"], data["cat2"], data["memo_time"], data["idpt"], data["xbody"], data["latitude"], data["address"])
-  updateValues=(data["info"], data["stitle"], data["longitude"], data["MRT"], data["cat1"], data["cat2"], data["memo_time"], data["idpt"], data["xbody"], data["latitude"], data["address"])
+  insertValues=(data["serial_no"],data["name"], data["category"], data["description"], data["address"], data["transport"], data["mrt"], data["latitude"], data["longitude"])
+  updateValues=(data["name"], data["category"], data["description"], data["address"], data["transport"], data["mrt"], data["latitude"], data["longitude"])
   values = insertValues + updateValues
 
   mycursor.execute(SQL, values)
@@ -105,7 +97,7 @@ def deleteAttractionFiles(attractionId):
 
 def insertAttractionFiles(attractionId, files):
   insertSQL=("INSERT INTO attractionFiles "
-  "(attraction_id, picturePath) "
+  "(attraction_id, path) "
   "VALUES "
   "(%s, %s)")
   for item in files:
