@@ -7,6 +7,7 @@ mydb = mysql.connector.connect(
   user="root",
   password="12345678",
   database="taipei_day_trip_website",
+  charset='utf8',
   auth_plugin="mysql_native_password"
 )
 
