@@ -3,7 +3,7 @@ import mysql.connector
 
 mydb = mysql.connector.connect(
   host="localhost",
-  user="root",
+  user="fwt",
   password="12345678",
   database="taipei_day_trip_website"
   ,auth_plugin="mysql_native_password"
@@ -32,85 +32,104 @@ def thankyou():
 
 def countData(keyword):
 	values={}
-	# values["keyword"]=f"%{keyword}%"
-	values["keyword"]=keyword
+	values["keyword"]=f"%{keyword}%"
 	selectSQL="SELECT COUNT(1) count FROM attractions "
-	# where="WHERE stitle LIKE %(keyword)s "
-	where="WHERE cat2=%(keyword)s "
+	where="WHERE name LIKE %(keyword)s "
 	SQL=selectSQL+where
+	if not keyword:
+		SQL=selectSQL
 	mycursor.execute(SQL, values)
 	result=mycursor.fetchone()
 	return result["count"]
 
 @app.route("/api/attractions" , methods=['GET'])
 def apiGetAttractionsByPage():
-	output={}
-	values={}
-	if not request.args.get('page'):
-		return
+	try:
+		output={}
+		values={}
 
-	limit=12
-	keyword=request.args.get('keyword')
-	v=(keyword,)
-	selectSQL="SELECT COUNT(1) count FROM attractions WHERE category=%s "
-	SQL=selectSQL
-	mycursor.execute(SQL, v)
-	result=mycursor.fetchone() 
-	total=result["count"]
-	print(total)
+		limit=12
+		page=request.args.get('page')
+		keyword=request.args.get('keyword')
 
-	page=int(request.args.get('page'))
-	startIndex=(page-1)*limit
-	endIndex=page*limit
-	items=limit
-	values=(keyword,startIndex,items)
+		if not page:
+			page=1
+		try:
+			page=int(page)
+		except ValueError:
+			page=1
 
-	if endIndex<total:
-		output["next"]={
-			"page":page+1,
-			"limit":limit
-		}
+		values["keyword"]=f"%{keyword}%"
+		values["startIndex"]=(page-1)*limit
+		values["endIndex"]=page*limit
+		values["items"]=limit
 
-	if startIndex>0:
-		output["previous"]={
-			"page":page-1,
-			"limit":limit
-		}
+		selectAllAttractions=("SELECT * FROM attractions ")
+		whereKeyword="WHERE name LIKE %(keyword)s "
+		pagination="ORDER BY MRT DESC LIMIT %(startIndex)s, %(items)s "
 
-	selectAllAttractions="SELECT atrac.*,  atracFile.path FROM attractions atrac LEFT JOIN attractionFiles atracFile on atracFile.attraction_id=atrac.serial_no WHERE category=%s ORDER BY MRT DESC LIMIT %s, %s "
+		SQL = selectAllAttractions + whereKeyword + pagination
+		
+		if not keyword:
+			SQL=selectAllAttractions + pagination
+			del values["keyword"]
 
-	SQL=selectAllAttractions
 
-	if not keyword:
-		SQL="SELECT atrac.*,  atracFile.path FROM attractions atrac LEFT JOIN attractionFiles atracFile on atracFile.attraction_id=atrac.serial_no ORDER BY MRT DESC LIMIT %s, %s "
-		values=(startIndex,items)
-	
-	mycursor.execute(SQL, values)
-	print(mycursor.statement)
-	# mycursor.execute(SQL, {'keyword': '公共藝術', 'startIndex': 12, 'items': 12})
-	result=mycursor.fetchall()
-	output["data"]=result
-	if not output["data"]:
+		mycursor.execute(SQL, values)
+		result=mycursor.fetchall()
+		if not result:
+			return json.dumps({
+				"error":True,
+				"message": "沒有更多資料"
+			})
+
+		output["data"]=result
+
+		total=countData(keyword)
+		if values["endIndex"]<total:
+			output["nextPage"]={
+				"page":page+1,
+				"limit":limit
+			}
+
+		if values["startIndex"]>0:
+			output["previousPage"]={
+				"page":page-1,
+				"limit":limit
+			}
+
+		return json.dumps(output)
+	except:
 		return json.dumps({
-			"error":True,
-			"message": "沒有更多資料"
+				"error":True,
+				"message": "伺服器內部錯誤"
 		})
-	return json.dumps(output)
 
 
-@app.route("/api/attractions/<attractionId>" , methods=['GET'])
+
+@app.route("/api/attraction/<attractionId>" , methods=['GET'])
 def apiGetAttractionsByID(attractionId):
-	output={}
-	SQL=("SELECT atrac.* "+
-	"FROM attractions atrac "+
-	"LEFT JOIN attractionFiles atracFile on atracFile.attraction_id=atrac.serial_no "+
-	"WHERE serial_no=%s")
-	values=(attractionId,)
-	mycursor.execute(SQL,values)
-	print(mycursor.statement)
-	result=mycursor.fetchone()
-	output["data"]=result
-	return output
+	try:
+		output={}
+		values={}
+		SQL=("SELECT * FROM attractions WHERE attraction_id=%(attractionId)s")
+		values["attractionId"]=attractionId
+		mycursor.execute(SQL,values)
+		result=mycursor.fetchone()
+		if not result:
+			return json.dumps({
+				"error":True,
+				"message": "沒有更多資料"
+			})
+
+		output["data"]=result
+		return json.dumps(output)
+	except:
+		return json.dumps({
+		"error":True,
+		"message": "伺服器內部錯誤"
+		})
+
 
 if __name__=="__main__":
   app.run(port="3000")
