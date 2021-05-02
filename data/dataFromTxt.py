@@ -1,14 +1,15 @@
 import urllib.request as request
 import json
 import mysql.connector
+import copy
 
 mydb = mysql.connector.connect(
   host="localhost",
   user="root",
   password="12345678",
   database="taipei_day_trip_website",
-  charset='utf8',
-  auth_plugin="mysql_native_password"
+  charset='utf8'
+  # auth_plugin="mysql_native_password"
 )
 
 mycursor = mydb.cursor(dictionary=True, buffered=True)
@@ -23,7 +24,7 @@ def mapItems(data):
 def mapItemsCondition(data):
   fileList=getFileList(data["file"]) 
   return {
-    "serial_no":data["SERIAL_NO"],
+    "attraction_id":data["SERIAL_NO"],
     "name":data["stitle"],
     "category":data["CAT2"],
     "description":data["xbody"],
@@ -60,50 +61,41 @@ def getFileList(data):
 
 def attractionsToDatabase(data):
   for item in data:
-    attraction_id = item["serial_no"]
+    attraction_id = item["attraction_id"]
     insertUpdateAttractionData(item)
-    deleteAttractionFiles(attraction_id)
-    insertAttractionFiles(attraction_id, item["images"])
 
 
 def insertUpdateAttractionData(data):  
   insertSQL=("INSERT INTO attractions "
-  "(serial_no, name, category, description, address, transport, mrt, latitude, longitude) "
+  "(attraction_id, name, category, description, address, transport, mrt, latitude, longitude, images) "
   "VALUES "
-  "(%s,%s,%s,%s,%s,%s,%s,%s,%s)")
+  "(%(attraction_id)s, %(name)s, %(category)s, %(description)s, %(address)s, %(transport)s, %(mrt)s, %(latitude)s, %(longitude)s, %(images)s)")
   updateSQL=("ON DUPLICATE KEY UPDATE "
-  "name=%s, "
-  "category=%s, "
-  "description=%s, "
-  "address=%s, "
-  "transport=%s, "
-  "mrt=%s, "
-  "latitude=%s, "
-  "longitude=%s ")
+  "name=%(name)s, "
+  "category=%(category)s, "
+  "description=%(description)s, "
+  "address=%(address)s, "
+  "transport=%(transport)s, "
+  "mrt=%(mrt)s, "
+  "latitude=%(latitude)s, "
+  "longitude=%(longitude)s, "
+  "images=%(images)s ")
   SQL = insertSQL + updateSQL
-  insertValues=(data["serial_no"],data["name"], data["category"], data["description"], data["address"], data["transport"], data["mrt"], data["latitude"], data["longitude"])
-  updateValues=(data["name"], data["category"], data["description"], data["address"], data["transport"], data["mrt"], data["latitude"], data["longitude"])
-  values = insertValues + updateValues
+  values={}
+  values["attraction_id"]=data["attraction_id"]
+  values["name"]=data["name"]
+  values["category"]=data["category"]
+  values["description"]=data["description"]
+  values["address"]=data["address"]
+  values["transport"]=data["transport"]
+  values["mrt"]=data["mrt"]
+  values["latitude"]=data["latitude"]
+  values["longitude"]=data["longitude"]
+  values["images"]=json.dumps(data["images"])
 
   mycursor.execute(SQL, values)
   mydb.commit()
 
-def deleteAttractionFiles(attractionId):
-  deleteSQL=("DELETE FROM attractionFiles "
-  "WHERE attraction_id=%s")
-  deleteValues=(attractionId,)
-  mycursor.execute(deleteSQL, deleteValues)
-  mydb.commit()
-
-def insertAttractionFiles(attractionId, files):
-  insertSQL=("INSERT INTO attractionFiles "
-  "(attraction_id, path) "
-  "VALUES "
-  "(%s, %s)")
-  for item in files:
-    insertValue=(attractionId, item)
-    mycursor.execute(insertSQL,insertValue)
-    mydb.commit()
 
 
 with open("./taipei-attractions.json", mode="r", encoding="utf-8") as file:
