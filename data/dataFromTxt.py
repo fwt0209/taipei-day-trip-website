@@ -5,7 +5,7 @@ import copy
 
 mydb = mysql.connector.connect(
   host="localhost",
-  user="root",
+  user="fwt",
   password="12345678",
   database="taipei_day_trip_website",
   charset='utf8'
