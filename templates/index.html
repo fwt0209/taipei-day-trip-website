@@ -1,0 +1,46 @@
+{% extends "layout.html" %} {% block
+content %}
+<nav>
+    <div class="navbar">
+        <div class="logo">台北一日遊</div>
+        <div class="menu">
+            <a class="menu-item" href="#">預定行程</a>
+            <a class="menu-item" href="#">登入/註冊</a>
+        </div>
+    </div>
+</nav>
+
+<header>
+
+    <!-- <div class="header_text">
+        <div class="slogan">輕鬆享受台北一日悠閒</div>
+        <div class="search">探索每個角落，體驗城市的深度旅遊行程</div>
+      </div> -->
+
+
+
+    <div class="right"></div>
+    <div class="left">
+        <img class="header_img" src="./pics/welcome 1.png" alt="" />
+    </div>
+
+
+</header>
+
+
+
+<main class="container">
+    <div id="viewPointGallery"></div>
+
+    <div class="loading">
+        <div class="ball"></div>
+        <div class="ball"></div>
+        <div class="ball"></div>
+    </div>
+    <!-- <div id="loadMore-btn">載入更多</div> -->
+</main>
+{% endblock %}
+
+{% block script %}
+<script src="./js/script.js"></script>
+{% endblock %}

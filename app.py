@@ -6,12 +6,12 @@ mydb = mysql.connector.connect(
   user="fwt",
   password="12345678",
   database="taipei_day_trip_website"
-  ,auth_plugin="mysql_native_password"
+#   ,auth_plugin="mysql_native_password"
 )
 
 mycursor = mydb.cursor(dictionary=True, buffered=True)
 
-app=Flask(__name__)
+app=Flask(__name__, static_folder="public", static_url_path="/")
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 
