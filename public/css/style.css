@@ -88,9 +88,42 @@
     width:100%; 
     }
   
+
   .header_text {
     position: absolute;
     top: 129px;
+    left: 20%;
+  }
+
+  .slogan1{
+    font-size: 2.8rem;
+    font-weight: bold;
+    line-height: 24px;
+    color: #f8f8f8;
+    text-shadow: 0px 0px 30px #AABBCC;
+  }
+
+  .slogan2{
+    margin-top: 15px;
+    font-size: 1.6rem;
+    line-height: 13px;
+    color: #f8f8f8;
+  }
+  
+  .search{
+    margin-top: 25px;
+    display: flex;
+    width: 460px;
+    height: 46px;
+  }
+  
+  .search input{
+    font-size: 1.6rem;
+    line-height: 13px;
+    width: 400px;
+    height: 46px;
+    padding-left: 15px;
+    filter: drop-shadow(0px 0px 20px #AABBCC);
   }
   
   .container {
@@ -210,6 +243,14 @@
     header{
       /* height: 320px; */
       padding-right: 0%;
+    }
+
+    .left{
+      right: -100px;
+    }
+
+    .header_text {
+      left: 5%;
     }
   }
   

@@ -52,7 +52,7 @@ function imagePathStringsToJSON(data) {
 
 async function getViewPointList(page = 1, keyword = "") {
     return new Promise((resolve, reject) => {
-        let url = new URL('http://52.68.89.158:3000/api/attractions');
+        let url = new URL('http://127.0.0.1:3000/api/attractions');
         url.searchParams.set('page', page);
         url.searchParams.set('keyword', keyword);
 
