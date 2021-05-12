@@ -1,6 +1,8 @@
 const viewPointGallery = document.getElementById("viewPointGallery");
 const loading = document.querySelector(".loading");
-isLoading = false;
+let isLoading = false;
+let page = 1
+let keyword = ""
 
 document.addEventListener("DOMContentLoaded", init)
 window.addEventListener("scroll", calculateViewPointsNeeds);
@@ -8,9 +10,6 @@ window.addEventListener("scroll", calculateViewPointsNeeds);
 function calculateViewPointsNeeds() {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
     if (clientHeight + scrollTop >= scrollHeight) {
-        console.log("to the bottom");
-
-        //show the loading animation
         showLoading();
     }
 }
@@ -20,8 +19,6 @@ function showLoading() {
 
     loading.classList.add("show");
     isLoading = true;
-
-    //load more data
     setTimeout(getMoreViewPoints, 500);
 }
 
@@ -30,18 +27,18 @@ function init() {
 }
 
 async function getMoreViewPoints() {
-    let viewPointList = await getViewPointList();
+    if (page === null) {
+        loading.classList.remove("show");
+        isLoading = false;
+        return
+    }
+    let viewPointList = await getViewPointList(page, keyword);
+
+    page = viewPointList["nextPage"] !== undefined ? viewPointList["nextPage"]["page"] : null
+
     imagePathStringsToJSON(viewPointList["data"])
     createGallery(viewPointList["data"]);
-    //
-    //將nextPage代入loading more，無下一頁則停止載入
-    //
-    if (viewPointList["nextPage"]) {
-        console.log(viewPointList)
-        calculateViewPointsNeeds()
-    }
-    console.log("oo")
-
+    calculateViewPointsNeeds()
 }
 
 function imagePathStringsToJSON(data) {
@@ -69,15 +66,9 @@ async function getViewPointList(page = 1, keyword = "") {
 }
 
 function createGallery(data) {
-    const currentGalleryLength = viewPointGallery.children.length;
-    const limit = 12;
-    const startIndex = currentGalleryLength;
-    const endIndex = currentGalleryLength + limit;
-
     let docFrag = document.createDocumentFragment();
-    let partialViewPointList = data.slice(startIndex, endIndex);
 
-    partialViewPointList.forEach((x) => {
+    data.forEach((x) => {
         let card = document.createElement("div");
         card.classList.add("card");
         let cardBody = document.createElement("div");
@@ -90,16 +81,31 @@ function createGallery(data) {
 
         let cardFooter = document.createElement("div");
         cardFooter.classList.add("card-footer");
+
         let cardFooterText = document.createElement("div");
         cardFooterText.classList.add("card-footer-text");
         cardFooterText.textContent = x.name;
         cardFooter.appendChild(cardFooterText);
+
+
+        let cardFooterText2 = document.createElement("div");
+        cardFooterText2.classList.add("card-footer-text")
+        let cardFooterTextLeft = document.createElement("div")
+        cardFooterTextLeft.classList.add("card-footer-left")
+        cardFooterTextLeft.textContent = x.mrt
+        cardFooterText2.appendChild(cardFooterTextLeft)
+        let cardFooterTextRight = document.createElement("div")
+        cardFooterTextRight.classList.add("card-footer-right")
+        cardFooterTextRight.textContent = x.category
+        cardFooterText2.appendChild(cardFooterTextRight)
+        cardFooter.appendChild(cardFooterText2);
+
+
         card.appendChild(cardFooter);
         docFrag.appendChild(card);
     });
     viewPointGallery.appendChild(docFrag);
 
-    //hide the loading animation
     loading.classList.remove("show");
     isLoading = false;
 }

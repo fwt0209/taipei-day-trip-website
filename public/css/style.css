@@ -1,9 +1,4 @@
-* {
-    margin: 0px;
-    padding: 0px;
-    box-sizing: border-box;
-  }
-  
+
   html {
     font-size: 62.5%;
   }
@@ -12,6 +7,11 @@
     margin: 0 auto;
     position: relative;
   }
+  * {
+      margin: 0px;
+      padding: 0px;
+      box-sizing: border-box;
+    }
   
   .box{
     border: 1px solid black;
@@ -69,11 +69,11 @@
     padding-right: 10%;  
   }
   
-  .right{
+  .header_right{
   flex-grow: 1;
   }
     
-  .left{
+  .header_left{
     flex-grow: 3;
     flex-basis: 200px;  
     display: flex;
@@ -115,6 +115,8 @@
     display: flex;
     width: 460px;
     height: 46px;
+    border-radius: 4px;
+    overflow: hidden;
   }
   
   .search input{
@@ -123,9 +125,19 @@
     width: 400px;
     height: 46px;
     padding-left: 15px;
+    border: 0;
     filter: drop-shadow(0px 0px 20px #AABBCC);
   }
   
+  .search_btn{
+  width: 60px;
+  height: 46px;
+  background-image: url("../pics/icon_search.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-color:  #448899;
+  }
+
   .container {
     position: relative;
     top: 54px;
@@ -142,14 +154,19 @@
   }
   
   .card {
-    padding: 10px 5px;
-    width: 290px;
+    margin: 15px 15px;
+    width: 270px;
     display: flex;
     flex-direction: column;
+    background: #FFFFFF;
+    border: 1px solid #E8E8E8;
+    border-radius: 5px;
+    overflow: hidden;
   }
   
   .card-body {
-    height: 190px;
+    height: 160px;
+    padding-bottom: 2px;
   }
   
   .card-body img {
@@ -159,20 +176,42 @@
     display: flex;
     flex: none;
     flex-grow: 0;
-    border: 1px solid #d2ebf8;
+    /* border: 1px solid #d2ebf8; */
   }
   
   .card-footer {
-    background-color: #ddeef8;
+    /* background-color: #ddeef8; */
     flex-grow: 1;
     /* height: 100%; */
   }
   
   .card-footer-text {
-    line-height: 2rem;
+    line-height: 1.33rem;
+    font-size: 1.6rem;
+    height: 40px;
+    font-weight: 800;
+    color: #757575;
+    display: flex;
+    align-items: center;
     word-break: break-all;
+    position: relative;
+    margin: 5px 10px 0px 10px;
+    /* padding-bottom: 7px; */
+  }
+
+  .card-footer-right{
+    text-align: right;
+    font-weight: normal;
+    width: 100%;
   }
   
+  .card-footer-left{
+    text-align: left;
+    font-weight: normal;
+    width: 100%;
+
+  }
+
   #loadMore-btn {
     padding: 12px 0px;
     width: 50%;
