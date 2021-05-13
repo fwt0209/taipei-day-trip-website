@@ -6,6 +6,22 @@ let keyword = ""
 
 document.addEventListener("DOMContentLoaded", init)
 window.addEventListener("scroll", calculateViewPointsNeeds);
+let search_btn = document.querySelector(".search_btn")
+search_btn.addEventListener("click", searchKeyword)
+let textInput = document.getElementById("textInput")
+textInput.addEventListener("keydown", keyDownEnter)
+
+function keyDownEnter(e) {
+    if (e.keyCode === 13) searchKeyword()
+}
+
+
+function searchKeyword() {
+    keyword = textInput.value
+    page = 1
+    viewPointGallery.textContent = ""
+    getMoreViewPoints();
+}
 
 function calculateViewPointsNeeds() {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
@@ -16,6 +32,11 @@ function calculateViewPointsNeeds() {
 
 function showLoading() {
     if (isLoading) return;
+    if (page === null) {
+        loading.classList.remove("show");
+        isLoading = false;
+        return
+    }
 
     loading.classList.add("show");
     isLoading = true;
@@ -27,13 +48,7 @@ function init() {
 }
 
 async function getMoreViewPoints() {
-    if (page === null) {
-        loading.classList.remove("show");
-        isLoading = false;
-        return
-    }
     let viewPointList = await getViewPointList(page, keyword);
-
     page = viewPointList["nextPage"] !== undefined ? viewPointList["nextPage"]["page"] : null
 
     imagePathStringsToJSON(viewPointList["data"])
@@ -47,7 +62,7 @@ function imagePathStringsToJSON(data) {
     })
 }
 
-async function getViewPointList(page = 1, keyword = "") {
+async function getViewPointList(page, keyword) {
     return new Promise((resolve, reject) => {
         let url = new URL('http://127.0.0.1:3000/api/attractions');
         url.searchParams.set('page', page);
@@ -71,13 +86,17 @@ function createGallery(data) {
     data.forEach((x) => {
         let card = document.createElement("div");
         card.classList.add("card");
+        let attractionLink = document.createElement("a")
+        attractionLink.href = `./attraction/${x.attraction_id}`
+        card.appendChild(attractionLink)
+
         let cardBody = document.createElement("div");
         cardBody.classList.add("card-body");
         let cardBodyImg = document.createElement("img");
         cardBodyImg.src = x.images[0];
         cardBodyImg.alt = x.name + "圖片";
         cardBody.appendChild(cardBodyImg);
-        card.appendChild(cardBody);
+        attractionLink.appendChild(cardBody);
 
         let cardFooter = document.createElement("div");
         cardFooter.classList.add("card-footer");
@@ -101,7 +120,7 @@ function createGallery(data) {
         cardFooter.appendChild(cardFooterText2);
 
 
-        card.appendChild(cardFooter);
+        attractionLink.appendChild(cardFooter);
         docFrag.appendChild(card);
     });
     viewPointGallery.appendChild(docFrag);

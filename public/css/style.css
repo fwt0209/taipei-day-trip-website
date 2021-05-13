@@ -1,11 +1,14 @@
 
   html {
     font-size: 62.5%;
+    font-family: Noto Sans TC;
+    height: 100%;
   }
   body{
     /* max-width: 1920px; */
     margin: 0 auto;
     position: relative;
+    height: 100%;
   }
   * {
       margin: 0px;
@@ -140,9 +143,10 @@
 
   .container {
     position: relative;
-    top: 54px;
+    top: 109px;
     width: 1200px;
-    margin: 0 auto;
+    min-height: calc(100vh - 528px);
+    margin: 0 auto 104px auto;
     text-align: center;
     padding-bottom: 50px;
   }
@@ -162,6 +166,10 @@
     border: 1px solid #E8E8E8;
     border-radius: 5px;
     overflow: hidden;
+  }
+
+  .card a{
+    text-decoration: none;
   }
   
   .card-body {
@@ -189,7 +197,7 @@
     line-height: 1.33rem;
     font-size: 1.6rem;
     height: 40px;
-    font-weight: 800;
+    font-weight: bold;
     color: #757575;
     display: flex;
     align-items: center;
@@ -209,22 +217,13 @@
     text-align: left;
     font-weight: normal;
     width: 100%;
-
   }
-
-  #loadMore-btn {
-    padding: 12px 0px;
-    width: 50%;
-    cursor: pointer;
-    margin: 30px auto;
-    background-color: #ddeef8;
-  }
-  
+ 
   .loading {
     opacity: 0;
     display: flex;
     position: fixed;
-    bottom: 50px;
+    bottom: 140px;
     left: 50%;
     transform: translateX(-50%);
     transition: opacity 0.3s ease-in;
@@ -250,7 +249,26 @@
   .ball:nth-of-type(3) {
     animation-delay: 0.2s;
   }
+
+  footer{
+    width: 100%;
+    height: 104px;
+    background-color: #757575;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   
+footer div{
+  width: 250px;
+  height: 14px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 1.6rem;
+  line-height: 1.3rem;
+  color: #fff;
+}
+
   @keyframes jump {
     0%,
     100% {
