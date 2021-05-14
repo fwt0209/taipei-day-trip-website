@@ -6,7 +6,7 @@ mydb = mysql.connector.connect(
   user="fwt",
   password="12345678",
   database="taipei_day_trip_website"
-  ,auth_plugin="mysql_native_password"
+#   ,auth_plugin="mysql_native_password"
 )
 
 mycursor = mydb.cursor(dictionary=True, buffered=True)
