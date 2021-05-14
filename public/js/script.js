@@ -51,13 +51,14 @@ async function getMoreViewPoints() {
     let viewPointList = await getViewPointList(page, keyword);
     page = viewPointList["nextPage"] !== undefined ? viewPointList["nextPage"]["page"] : null
 
-    imagePathStringsToJSON(viewPointList["data"])
-    createGallery(viewPointList["data"]);
+    imagePathStringsToJSON(viewPointList)
+    createGallery(viewPointList);
     calculateViewPointsNeeds()
 }
 
 function imagePathStringsToJSON(data) {
-    return data.forEach((value, index, array) => {
+    if (data["error"]) return viewPointGallery.textContent = "Ops! 沒有景點，請試試其他關鍵字。"
+    return data["data"].forEach((value, index, array) => {
         array[index]["images"] = JSON.parse(value["images"])
     })
 }
@@ -81,9 +82,11 @@ async function getViewPointList(page, keyword) {
 }
 
 function createGallery(data) {
+    if (data["error"]) return
+
     let docFrag = document.createDocumentFragment();
 
-    data.forEach((x) => {
+    data["data"].forEach((x) => {
         let card = document.createElement("div");
         card.classList.add("card");
         let attractionLink = document.createElement("a")

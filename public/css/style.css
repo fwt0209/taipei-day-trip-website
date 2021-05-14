@@ -125,7 +125,7 @@
   .search input{
     font-size: 1.6rem;
     line-height: 13px;
-    width: 400px;
+    width: 100%;
     height: 46px;
     padding-left: 15px;
     border: 0;
@@ -133,12 +133,12 @@
   }
   
   .search_btn{
-  width: 60px;
-  height: 46px;
-  background-image: url("../pics/icon_search.png");
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-color:  #448899;
+    width: 60px;
+    height: 46px;
+    background-image: url("../pics/icon_search.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color:  #448899;
   }
 
   .container {
@@ -158,7 +158,7 @@
   }
   
   .card {
-    margin: 15px 15px;
+    margin: 15px 13px;
     width: 270px;
     display: flex;
     flex-direction: column;
@@ -302,7 +302,7 @@ footer div{
       padding-right: 0%;
     }
 
-    .left{
+    .header_left{
       right: -100px;
     }
 
@@ -313,7 +313,7 @@ footer div{
   
   @media (max-width: 600px) {
     .card {
-      width: 90%;
+      width: 95%;
     }
   
     nav .menu {
@@ -325,8 +325,12 @@ footer div{
       overflow: hidden;
     }
   
-    .left{
+    .header_left{
       right: -80px;
+    }
+
+    .search{
+      width: 290px;
     }
   }
   

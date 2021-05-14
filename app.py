@@ -66,7 +66,7 @@ def apiGetAttractionsByPage():
 
 		selectAllAttractions=("SELECT * FROM attractions ")
 		whereKeyword="WHERE name LIKE %(keyword)s "
-		pagination="ORDER BY MRT DESC LIMIT %(startIndex)s, %(items)s "
+		pagination="ORDER BY name DESC LIMIT %(startIndex)s, %(items)s "
 
 		SQL = selectAllAttractions + whereKeyword + pagination
 		
@@ -77,6 +77,7 @@ def apiGetAttractionsByPage():
 
 		mycursor.execute(SQL, values)
 		result=mycursor.fetchall()
+		print(mycursor.statement)
 		if not result:
 			return json.dumps({
 				"error":True,
