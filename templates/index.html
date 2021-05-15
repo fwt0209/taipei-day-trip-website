@@ -1,19 +1,11 @@
 {% extends "layout.html" %} {% block
 content %}
-<nav>
-    <div class="navbar">
-        <div class="logo">台北一日遊</div>
-        <div class="menu">
-            <a class="menu-item" href="#">預定行程</a>
-            <a class="menu-item" href="#">登入/註冊</a>
-        </div>
-    </div>
-</nav>
+
 
 <header>
     <div class="header_right"></div>
     <div class="header_left">
-        <img class="header_img" src="./pics/welcome 1.png" alt="" />
+        <img class="header_img" src="/pics/welcome 1.png" alt="" />
     </div>
     <div class="header_text">
         <div class="slogan1">輕鬆享受台北一日悠閒</div>
@@ -25,21 +17,12 @@ content %}
     </div>
 </header>
 
-<main class="container">
-    <div id="viewPointGallery"></div>
+<div id="viewPointGallery"></div>
 
-    <div class="loading">
-        <div class="ball"></div>
-        <div class="ball"></div>
-        <div class="ball"></div>
-    </div>
-</main>
 
-<footer>
-    <div>COPYRIGHT © 2021 台北一日遊</div>
-</footer>
+
 {% endblock %}
 
 {% block script %}
-<script src="./js/script.js"></script>
+<script src="/js/script.js"></script>
 {% endblock %}

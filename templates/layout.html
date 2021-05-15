@@ -6,12 +6,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title%} {% endblock %}</title>
-    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="/css/style.css" />
     {% block css %} {% endblock %}
 </head>
 
 <body>
-    {% block content %} {% endblock %} {% block script %} {% endblock %}
+    <nav>
+        <div class="navbar">
+            <div class="logo">台北一日遊</div>
+            <div class="menu">
+                <a class="menu-item" href="#">預定行程</a>
+                <a class="menu-item" href="#">登入/註冊</a>
+            </div>
+        </div>
+    </nav>
+    <main class="container">
+        {% block content %} {% endblock %}
+    </main>
+    <div class="loading">
+        <div class="ball"></div>
+        <div class="ball"></div>
+        <div class="ball"></div>
+    </div>
+    <footer>
+        <div>COPYRIGHT © 2021 台北一日遊</div>
+    </footer>
+    {% block script %} {% endblock %}
 </body>
 
 </html>

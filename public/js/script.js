@@ -25,7 +25,7 @@ function searchKeyword() {
 
 function calculateViewPointsNeeds() {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    if (clientHeight + scrollTop >= scrollHeight) {
+    if (clientHeight + scrollTop >= scrollHeight - 154) {
         showLoading();
     }
 }
@@ -45,12 +45,15 @@ function showLoading() {
 
 function init() {
     getMoreViewPoints();
+    console.log("init")
 }
 
 async function getMoreViewPoints() {
     let viewPointList = await getViewPointList(page, keyword);
     page = viewPointList["nextPage"] !== undefined ? viewPointList["nextPage"]["page"] : null
 
+    console.log(viewPointList)
+    console.log(page)
     imagePathStringsToJSON(viewPointList)
     createGallery(viewPointList);
     calculateViewPointsNeeds()
@@ -65,8 +68,8 @@ function imagePathStringsToJSON(data) {
 
 async function getViewPointList(page, keyword) {
     return new Promise((resolve, reject) => {
-        // let url = new URL('http://127.0.0.1:3000/api/attractions');
-        let url = new URL('http://52.68.89.158:3000/api/attractions');
+        let url = new URL('http://127.0.0.1:3000/api/attractions');
+        // let url = new URL('http://52.68.89.158:3000/api/attractions');
         url.searchParams.set('page', page);
         url.searchParams.set('keyword', keyword);
 
