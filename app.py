@@ -11,7 +11,7 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor(dictionary=True, buffered=True)
 
-app=Flask(__name__)
+app=Flask(__name__, static_folder="public", static_url_path="/")
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 
@@ -66,7 +66,7 @@ def apiGetAttractionsByPage():
 
 		selectAllAttractions=("SELECT * FROM attractions ")
 		whereKeyword="WHERE name LIKE %(keyword)s "
-		pagination="ORDER BY MRT DESC LIMIT %(startIndex)s, %(items)s "
+		pagination="ORDER BY name DESC LIMIT %(startIndex)s, %(items)s "
 
 		SQL = selectAllAttractions + whereKeyword + pagination
 		
@@ -77,6 +77,7 @@ def apiGetAttractionsByPage():
 
 		mycursor.execute(SQL, values)
 		result=mycursor.fetchall()
+		print(mycursor.statement)
 		if not result:
 			return json.dumps({
 				"error":True,
