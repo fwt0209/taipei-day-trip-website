@@ -78,6 +78,7 @@
     margin: 0 auto;
     background: linear-gradient(135deg, #aaddee, #66aabb);
     padding-right: 10%;  
+    overflow: hidden;
   }
   
   .header_right{
@@ -225,8 +226,8 @@
     position: relative;
     width: 60px;
     bottom: 40px;
-    /* left: 50%; */
-    /* transform: translateX(-50%); */
+    left: 50%;
+    transform: translateX(-50%);
     transition: opacity 0.3s ease-in;
   }
   
@@ -324,7 +325,6 @@ footer div{
   
     header{
       height: 280px;
-      overflow: hidden;
     }
   
     .header_left{
