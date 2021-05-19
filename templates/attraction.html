@@ -1,11 +1,53 @@
-{% extends "layout.html" %} {% block
-content %}
+{% extends "layout.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="/css/attraction.css" />
+{% endblock %}
 
 
-Hi
+{% block content %}
+<div class="attraction_container">
+    <section class="attraction_profile box">
+        <div class="pictures_container box"></div>
+        <div class="profile box">
+            <div class="profile_name text_align_center">平安鐘</div>
+            <div class="profile_category_mrt text_align_center>
+                <span class=" profile_category">公共藝術</span>
+                <span>at</span>
+                <span class="mrt">忠孝復興</span>
+            </div>
+            <form action="" method="post">
+                <div class="title text_align_center">訂購導覽行程</div>
+                <div class="sub_title text_align_center">以此景點為中心的一日行程，帶您探索城市角落故事</div>
+                <div class="field">
+                    <label for="datetime">選擇日期:
+                        <input type="date" name="datetime" id="datetime">
+                    </label>
+                </div>
+                <div class="field">
+                    <label for="morning">選擇時間:
+                        <input type="radio" name="morning" id="morning" checked>
+                        <label for="morning">上半天</label>
+                        <input type="radio" name="afternoon" id="afternoon">
+                        <label for="afternoon">下半天</label>
+                    </label>
+                </div>
+                <div class="field">
+                    <label for="">導覽費用:
+                        <div>新台幣<span class="cost">2000</span>元</div>
+                    </label>
+                </div>
+                <input type="button" value="開始預訂行程">
+            </form>
+        </div>
+    </section>
+    <section class="attraction_description box"></section>
+</div>
 
 
 {% endblock %}
 
+
 {% block script %}
+<script src="/js/attraction.js"></script>
 {% endblock %}
