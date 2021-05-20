@@ -7,9 +7,9 @@
 
 {% block content %}
 <div class="attraction_container">
-    <section class="attraction_profile box">
-        <div class="pictures_container box"></div>
-        <div class="profile box">
+    <section class="attraction_profile">
+        <div class="pictures_container"></div>
+        <div class="profile">
             <div class="profile_name text_align_center">平安鐘</div>
             <div class="profile_category_mrt text_align_center>
                 <span class=" profile_category">公共藝術</span>
@@ -20,24 +20,34 @@
                 <div class="title text_align_center">訂購導覽行程</div>
                 <div class="sub_title text_align_center">以此景點為中心的一日行程，帶您探索城市角落故事</div>
                 <div class="field">
-                    <label for="datetime">選擇日期:
-                        <input type="date" name="datetime" id="datetime">
+                    <label for="date">選擇日期：
+                        <input type="date" name="date" id="date" class="date">
                     </label>
                 </div>
                 <div class="field">
-                    <label for="morning">選擇時間:
-                        <input type="radio" name="morning" id="morning" checked>
-                        <label for="morning">上半天</label>
-                        <input type="radio" name="afternoon" id="afternoon">
-                        <label for="afternoon">下半天</label>
-                    </label>
+                    <label for="">選擇時間：
+                        <input type="radio" name="time" id="morning" value="morning" class="time" checked>
+                        <label for="morning">
+                            <div class="time_tag">
+                                <div>上半天</div>
+                                <h6>09:00~16:00</h6>
+                            </div>
+                        </label>
+                        <input type="radio" name="time" id="afternoon" value="afternoon" class="time">
+                        <label for="afternoon">
+                            <div class="time_tag">
+                                <div>下半天</div>
+                                <h6>14:00~21:00</h6>
+                            </div>
+                        </label>
+                    </label>　
                 </div>
                 <div class="field">
-                    <label for="">導覽費用:
-                        <div>新台幣<span class="cost">2000</span>元</div>
+                    <label for="">導覽費用：
+                        <div class="price">新台幣2000元</div>
                     </label>
                 </div>
-                <input type="button" value="開始預訂行程">
+                <input type="button" value="開始預訂行程" class="booking_btn">
             </form>
         </div>
     </section>

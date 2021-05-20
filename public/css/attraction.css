@@ -20,7 +20,7 @@
 }
 
 .profile{
-    width: 600px;
+    max-width: 600px;
     color: #666666;
     text-align: start;
 }
@@ -57,7 +57,7 @@
 }
 
 .profile form .field{
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .profile form .sub_title{
@@ -72,11 +72,48 @@
     align-items: center;
     font-size: 1.6rem;
     font-weight: bold;
+}
 
+.profile form .field>label .date{
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.profile form .field>label .time{
+    margin: 0 6px 0 10px;
+    font-size: 2.2rem;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.profile form .field>label .time_tag{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 18px;
+    cursor: pointer;
+}
+
+.profile form .field>label .price{
+    margin-left: 5px;
+}
+
+.profile form .booking_btn{
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    width: 154px;
+    height: 36px;
+    background: #448899;
+    border-radius: 5px;
+    font-size: 1.9rem;
+    line-height: 1.9rem;
+    cursor: pointer;
 }
 
 .attraction_description{
-    width: 1180px;
+    max-width: 1180px;
 }
 
 @media (max-width: 1200px) {
