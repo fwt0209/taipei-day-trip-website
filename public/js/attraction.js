@@ -4,7 +4,7 @@ let slideIndex = 1;
 async function init() {
     const attraction_id = getAttractionId(window.location.pathname)
     const viewPoint = await getViewPoint(attraction_id)
-    console.log(viewPoint)
+    showAttractionInfo(viewPoint.data)
     createSlides(viewPoint.data.images)
     showSlides(slideIndex);
     document.addEventListener("keydown", (e) => {
@@ -13,6 +13,22 @@ async function init() {
     document.addEventListener("keydown", (e) => {
         if (e.keyCode === 37) plusSlides(-1)
     })
+}
+
+function showAttractionInfo(data) {
+    let name = document.getElementById("name")
+    let category = document.getElementById("category")
+    let mrt = document.getElementById("mrt")
+    let description = document.getElementById("description")
+    let address = document.getElementById("address")
+    let transport = document.getElementById("transport")
+
+    name.textContent = data.name
+    category.textContent = data.category
+    mrt.textContent = data.mrt
+    description.textContent = data.description
+    address.textContent = data.address
+    transport.textContent = data.transport
 }
 
 let price = document.getElementById("price")
@@ -114,8 +130,8 @@ function getAttractionId(urlPath) {
 
 async function getViewPoint(attraction_id) {
     return new Promise((resolve, reject) => {
-        let api = new URL('http://127.0.0.1:3000/api/attraction');
-        // let api = new URL('http://52.68.89.158:3000/api/attraction');
+        // let api = new URL('http://127.0.0.1:3000/api/attraction');
+        let api = new URL('http://52.68.89.158:3000/api/attraction');
         const url = api.pathname.concat(`/${attraction_id}`)
 
         let xhr = new XMLHttpRequest();

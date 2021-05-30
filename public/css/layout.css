@@ -44,6 +44,7 @@ html {
     font-size: 3rem;
     color: #448899;
     font-weight: bold;
+    text-decoration: none;
   }
   
   .navbar .menu {
