@@ -130,8 +130,8 @@ function getAttractionId(urlPath) {
 
 async function getViewPoint(attraction_id) {
     return new Promise((resolve, reject) => {
-        // let api = new URL('http://127.0.0.1:3000/api/attraction');
-        let api = new URL('http://52.68.89.158:3000/api/attraction');
+        let api = new URL('http://127.0.0.1:3000/api/attraction');
+        // let api = new URL('http://52.68.89.158:3000/api/attraction');
         const url = api.pathname.concat(`/${attraction_id}`)
 
         let xhr = new XMLHttpRequest();
