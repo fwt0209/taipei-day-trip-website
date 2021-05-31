@@ -1,11 +1,114 @@
-{% extends "layout.html" %} {% block
-content %}
+{% extends "layout.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="/css/attraction.css" />
+{% endblock %}
 
 
-Hi
+{% block content %}
+<div class="attraction_container">
+    <section class="attraction_profile">
+        <div class="pictures_container">
+
+            <div class="slideshow" id="slideshow">
+                <!-- <div class="slides fade">
+                    <div class="numbertext">1 / 4</div>
+                    <img
+                        src="http://www.travel.taipei/d_upload_ttn/sceneadmin/image/A0/B0/C1/D701/E894/F406/f0d2bc48-e741-4acd-9edc-1dbdd32ce186.JPG">
+                </div>
+                <div class="slides fade">
+                    <div class="numbertext">2 / 4</div>
+                    <img
+                        src="http://www.travel.taipei/d_upload_ttn/sceneadmin/image/A0/B0/C0/D924/E902/F684/afcc8dd5-e9f0-48c3-8f4b-54d13ec6c69f.png">
+                </div>
+
+                <div class="slides fade">
+                    <div class="numbertext">3 / 4</div>
+                    <img
+                        src="http://www.travel.taipei/d_upload_ttn/sceneadmin/image/A0/B0/C1/D409/E499/F176/7004d0a0-4aa0-446e-b825-ea77f3c5b750.png">
+                </div>
+
+                <div class="slides fade">
+                    <div class="numbertext">4 / 4</div>
+                    <img
+                        src="http://www.travel.taipei/d_upload_ttn/sceneadmin/image/A0/B0/C1/D98/E612/F567/7553aaba-3103-4d88-a710-d0994ba86e25.png">
+                </div>
+
+                <div class="pages">
+                    <span class="dot" onclick="currentSlide(1)"></span>
+                    <span class="dot" onclick="currentSlide(2)"></span>
+                    <span class="dot" onclick="currentSlide(3)"></span>
+                    <span class="dot" onclick="currentSlide(4)"></span>
+                </div>
+
+                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1)">&#10095;</a> -->
+            </div>
+
+        </div>
+        <div class="profile_container">
+
+            <div class="profile">
+                <div class="profile_name text_align_center" id="name">平安鐘</div>
+                <div class="profile_category_mrt text_align_center">
+                    <span class=" profile_category" id="category">公共藝術</span>
+                    <span> at </span>
+                    <span class="mrt" id="mrt">忠孝復興</span>
+                </div>
+                <form action="" method="post">
+                    <div class="title text_align_center">訂購導覽行程</div>
+                    <div class="sub_title text_align_center">以此景點為中心的一日行程，帶您探索城市角落故事</div>
+                    <div class="field">
+                        <label for="date">選擇日期：
+                            <input type="date" name="date" id="date" class="date">
+                        </label>
+                    </div>
+                    <div class="field">
+                        <label for="">選擇時間：
+                            <input type="radio" name="time" id="morning" value="morning" class="time" checked>
+                            <label for="morning">
+                                <div class="time_tag">
+                                    <div>上半天</div>
+                                    <h6>09:00~16:00</h6>
+                                </div>
+                            </label>
+                            <input type="radio" name="time" id="afternoon" value="afternoon" class="time">
+                            <label for="afternoon">
+                                <div class="time_tag">
+                                    <div>下半天</div>
+                                    <h6>14:00~21:00</h6>
+                                </div>
+                            </label>
+                        </label>　
+                    </div>
+                    <div class="field">
+                        <label for="">導覽費用：
+                            <div class="price" id="price">新台幣2000元</div>
+                        </label>
+                    </div>
+                    <input type="button" value="開始預訂行程" class="booking_btn">
+                </form>
+            </div>
+        </div>
+    </section>
+    <section class="attraction_description">
+        <p id="description">
+            陽明公園位在臺北市的北邊，距離市區大概17公里；日據時代這裡遍地茅草，因此叫做草山。臺灣光復後，為了紀念王陽明先生，1950年時，將「草山」改為「陽明山」，並設立陽明山管理局來開闢陽明公園。只是公園都市計畫面積約107公頃，陽明山管理局在1977年改制後，就把公園業務，交給公園路燈工程管理處接管。這座屬於大屯山群區，海拔445公尺的公園，後有七星山，左有紗帽山，右近大屯山，遠望觀音山層巒疊岫；氣候溫暖、濕潤，而且夏季涼爽，是個絕佳的避暑勝地，也是臺灣唯一有死火山地勢、硫磺氣孔跟溫泉自然景觀的地方。公園內種滿了梅、櫻、桃、李、杜鵑、茶花等各種花卉，每年春天櫻花盛開時，總吸引很多人上山賞花；加上一座由各式當季花卉組成的花鐘；如果您來到這，別忘了跟陽明山最具代表性的花鐘拍照留念。來陽明公園，可以春天賞花，夏天避暑，秋天觀賞芒花跟楓葉、冬天泡溫泉；陽明山四季不同的美景、樂趣，就等著您來挖寶！
+        </p>
+        <br>
+        <h3>景點地址:</h3>
+        <p id="address">臺北市 北投區湖山路二段</p>
+        <br>
+        <h3>交通方式:</h3>
+        <p id="transport">捷運站名：捷運劍潭站，轉乘260、紅5公車至陽明山站。公車：109、260、260(區間車)、小9、小9(區間車)、紅5至陽明山站。</p>
+
+    </section>
+</div>
 
 
 {% endblock %}
 
+
 {% block script %}
+<script src="/js/attraction.js"></script>
 {% endblock %}
