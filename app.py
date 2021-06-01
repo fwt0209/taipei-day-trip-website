@@ -1,5 +1,6 @@
 from flask import *
 import mysql.connector
+from datetime import timedelta
 
 mydb = mysql.connector.connect(
   host="localhost",
@@ -12,6 +13,8 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor(dictionary=True, buffered=True)
 
 app=Flask(__name__, static_folder="public", static_url_path="/")
+app.permanent_session_lifetime = timedelta(days=2)
+
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 
@@ -131,6 +134,20 @@ def apiGetAttractionsByID(attractionId):
 		"message": "伺服器內部錯誤"
 		})
 
+
+@app.route("api/user" , methods=["GET"])
+def apiGetUser():
+	output={}
+	if 'username' in session:
+		userInfo={}
+		userInfo["id"]=session["id"]
+		userInfo["name"]=session["name"]
+		userInfo["email"]=session["email"]
+
+		output["data"]=userInfo
+		return json.dumps(output)
+	output["data"]="null"
+	return json.dumps(output)
 
 if __name__=="__main__":
   app.run(host="0.0.0.0", port="3000")
