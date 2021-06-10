@@ -17,10 +17,46 @@
             <a href="/" class="logo">台北一日遊</a>
             <div class="menu">
                 <a class="menu-item" href="#">預定行程</a>
-                <a class="menu-item" href="#">登入/註冊</a>
+                <a class="menu-item" href="#" id="login_tag">登入/註冊</a>
+                <a class="menu-item logout_tag" href="#" id="logout_tag">登出系統</a>
             </div>
         </div>
     </nav>
+    <div id="modal" class="modal">
+        <div class="modal_content">
+            <div class="decorator_bar">
+                <span id="closeBtn" class="close" title="Close Modal">&times;</span>
+            </div>
+
+            <form class="animate login_form" action="/api/user" method="PATCH" onsubmit="return false;">
+                <div class="form_container">
+                    <div class="title">登入會員帳號</div>
+                    <input type="text" placeholder="輸入電子信箱" name="email" required>
+                    <input type="password" placeholder="輸入密碼" name="password" required>
+                    <button id="login_btn">登入帳戶</button>
+                    <div class="form_message">
+                        <div class="form_text" id="login_form_message"></div>
+                        還沒有帳戶? <span id="goToRegister">點此註冊</span>
+                    </div>
+                </div>
+            </form>
+
+            <form class="animate register_form" action="/api/user" method="POST" onsubmit="return false;">
+                <div class="form_container">
+                    <div class="title">註冊會員帳號</div>
+                    <input type="text" placeholder="輸入電子信箱" name="email" required>
+                    <input type="text" placeholder="輸入姓名" name="name" required>
+                    <input type="password" placeholder="輸入密碼" name="password" required>
+                    <button id="registe_btn">註冊新帳戶</button>
+                    <div class="form_message">
+                        <div class="form_text" id="register_form_message"></div>
+                        已經有帳戶了? <span id="goToLogin">點此登入</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
 
     <main class="container">
         {% block content %} {% endblock %}
@@ -34,6 +70,8 @@
     <footer>
         <div>COPYRIGHT © 2021 台北一日遊</div>
     </footer>
+
+    <script src="/js/layout.js"></script>
     {% block script %} {% endblock %}
 </body>
 

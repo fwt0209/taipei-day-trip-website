@@ -45,15 +45,11 @@ function showLoading() {
 
 function init() {
     getMoreViewPoints();
-    console.log("init")
 }
 
 async function getMoreViewPoints() {
     let viewPointList = await getViewPointList(page, keyword);
     page = viewPointList["nextPage"] !== undefined ? viewPointList["nextPage"]["page"] : null
-
-    console.log(viewPointList)
-    console.log(page)
     imagePathStringsToJSON(viewPointList)
     createGallery(viewPointList);
     calculateViewPointsNeeds()

@@ -1,6 +1,7 @@
 from flask import *
 import mysql.connector
 from datetime import timedelta
+import bcrypt
 
 mydb = mysql.connector.connect(
   host="localhost",
@@ -135,10 +136,10 @@ def apiGetAttractionsByID(attractionId):
 		})
 
 
-@app.route("api/user" , methods=["GET"])
+@app.route("/api/user" , methods=["GET"])
 def apiGetUser():
 	output={}
-	if 'username' in session:
+	if 'email' in session:
 		userInfo={}
 		userInfo["id"]=session["id"]
 		userInfo["name"]=session["name"]
@@ -148,6 +149,43 @@ def apiGetUser():
 		return json.dumps(output)
 	output["data"]="null"
 	return json.dumps(output)
+
+@app.route("/api/user" , methods=["POST"])
+def apiSignUp():
+	output={}
+	values={}
+	output["ok"]=False
+	output["msg"]="帳號已被註冊"
+	print(request.get_data())
+	return
+	# try:
+	if request.form['email']=="" or request.form['password']=="" or request.form['name']=="":
+		output["msg"]="資料輸入不完整，請再輸入一次"
+		return json.dumps(output)
+	
+	password=request.form['password']
+	values["email"]=request.form['email']
+	values["name"]=request.form['name']
+	sql="SELECT * FROM user WHERE email=%(email)s"
+	mycursor.execute(sql,values)
+	result=mycursor.fetchone()
+
+	if result:
+		return json.dumps(output)
+
+	hashedPassword = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt(14))
+	sql="INSERT INTO user (name, email, password) VALUES (%(name)s, %(email)s, %(hashedPassword)s)"
+	values["hashedPassword"]=hashedPassword
+	mycursor.execute(sql,values)
+	mydb.commit()
+
+	output["ok"]=True
+	output["msg"]=""
+	return json.dumps(output)
+	# except:
+	# 	output["msg"]="伺服器內部發生錯誤"
+	# 	return json.dumps(output)
+
 
 if __name__=="__main__":
   app.run(host="0.0.0.0", port="3000")
