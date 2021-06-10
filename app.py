@@ -2,6 +2,7 @@ from flask import *
 import mysql.connector
 from datetime import timedelta
 import bcrypt
+import os
 
 mydb = mysql.connector.connect(
   host="localhost",
@@ -14,6 +15,7 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor(dictionary=True, buffered=True)
 
 app=Flask(__name__, static_folder="public", static_url_path="/")
+app.secret_key = os.urandom(128).hex()
 app.permanent_session_lifetime = timedelta(days=2)
 
 app.config["JSON_AS_ASCII"]=False
@@ -156,31 +158,61 @@ def apiSignUp():
 	values={}
 	output["ok"]=False
 	output["msg"]="帳號已被註冊"
-	print(request.get_data())
-	return
+	data=request.json
+	try:
+		if data['email']=="" or data['password']=="" or data['name']=="":
+			output["msg"]="資料輸入不完整，請再輸入一次"
+			return json.dumps(output)
+		
+		password=data['password']
+		values["email"]=data['email']
+		values["name"]=data['name']
+		sql="SELECT * FROM user WHERE email=%(email)s"
+		mycursor.execute(sql,values)
+		result=mycursor.fetchone()
+
+		if result:
+			return json.dumps(output)
+
+		hashedPassword = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt(14))
+		sql="INSERT INTO user (name, email, password) VALUES (%(name)s, %(email)s, %(hashedPassword)s)"
+		values["hashedPassword"]=hashedPassword
+		mycursor.execute(sql,values)
+		mydb.commit()
+
+		output["ok"]=True
+		output["msg"]="註冊成功"
+		return json.dumps(output)
+	except:
+		output["msg"]="伺服器內部發生錯誤"
+		return json.dumps(output)
+
+@app.route('/api/user', methods=['PATCH'])
+def apiLogin():
+	output={}
+	values={}
+	output["ok"]=False
+	output["msg"]="帳號或密碼輸入錯誤"
+	data=request.json
 	# try:
-	if request.form['email']=="" or request.form['password']=="" or request.form['name']=="":
+	if data['email']=="" or data['password']=="":
 		output["msg"]="資料輸入不完整，請再輸入一次"
 		return json.dumps(output)
-	
-	password=request.form['password']
-	values["email"]=request.form['email']
-	values["name"]=request.form['name']
+
+	values["email"]=data['email']
+	password=data['password']
 	sql="SELECT * FROM user WHERE email=%(email)s"
 	mycursor.execute(sql,values)
 	result=mycursor.fetchone()
-
-	if result:
+	if not result:
 		return json.dumps(output)
-
-	hashedPassword = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt(14))
-	sql="INSERT INTO user (name, email, password) VALUES (%(name)s, %(email)s, %(hashedPassword)s)"
-	values["hashedPassword"]=hashedPassword
-	mycursor.execute(sql,values)
-	mydb.commit()
-
-	output["ok"]=True
-	output["msg"]=""
+	if bcrypt.checkpw(password.encode("utf-8"), result["password"].encode("utf-8")):
+		session['id'] = result["id"]
+		session['name'] = result["name"]
+		session['email'] = values["email"]
+		output["ok"]=True
+		output["msg"]="登入成功"
+		return json.dumps(output)
 	return json.dumps(output)
 	# except:
 	# 	output["msg"]="伺服器內部發生錯誤"

@@ -33,7 +33,6 @@ function init() {
 
 async function loginValidation() {
     let isLogin = await getUser()
-    console.log(isLogin)
     if (isLogin.data === "null") {
         login_tag.style.display = "inline"
         logout_tag.style.display = "none"
@@ -63,7 +62,7 @@ goToLogin.addEventListener("click", () => {
     register_form_message.textContent = ""
 })
 
-registe_btn.addEventListener("click", () => {
+registe_btn.addEventListener("click", async () => {
     let registrationData = document.querySelectorAll("form.register_form input")
     let data = Array.from(registrationData).reduce((data, e) => {
         if (!data[e.name]) {
@@ -71,7 +70,25 @@ registe_btn.addEventListener("click", () => {
         }
         return data
     }, {})
-    setUser("POST", data)
+    let result = await setUser("POST", data)
+    if (result["ok"]) {
+        Array.from(registrationData).map((e) => {
+            e.value = ""
+        })
+    }
+    register_form_message.textContent = result["msg"]
+})
+
+login_btn.addEventListener("click", async () => {
+    let loginData = document.querySelectorAll("form.login_form input")
+    let data = Array.from(loginData).reduce((data, e) => {
+        if (!data[e.name]) {
+            data[e.name] = e.value
+        }
+        return data
+    }, {})
+    let result = await setUser("PATCH", data)
+    console.log(result)
 })
 
 async function getUser() {
