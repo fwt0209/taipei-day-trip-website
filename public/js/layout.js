@@ -11,10 +11,12 @@ let registe_btn = document.getElementById("registe_btn")
 let goToRegister = document.getElementById("goToRegister")
 let goToLogin = document.getElementById("goToLogin")
 let closeBtn = document.getElementById("closeBtn")
+let registrationData = document.querySelectorAll("form.register_form input")
+let loginData = document.querySelectorAll("form.login_form input")
 let login_form_message = document.getElementById("login_form_message")
 let register_form_message = document.getElementById("register_form_message")
 
-window.addEventListener("click", (e) => {
+window.addEventListener("mousedown", (e) => {
     if (e.target === modal) {
         resetStatus()
     }
@@ -24,6 +26,16 @@ function resetStatus() {
     modal.style.display = "none";
     register_form.style.display = "none"
     login_form.style.display = "none"
+    resetFormInput()
+}
+
+function resetFormInput() {
+    Array.from(loginData).map((e) => {
+        e.value = ""
+    })
+    Array.from(registrationData).map((e) => {
+        e.value = ""
+    })
     login_form_message.textContent = ""
     register_form_message.textContent = ""
 }
@@ -54,16 +66,15 @@ closeBtn.addEventListener("click", () => {
 goToRegister.addEventListener("click", () => {
     register_form.style.display = "block"
     login_form.style.display = "none"
-    login_form_message.textContent = ""
+    resetFormInput()
 })
 goToLogin.addEventListener("click", () => {
     register_form.style.display = "none"
     login_form.style.display = "block"
-    register_form_message.textContent = ""
+    resetFormInput()
 })
 
 registe_btn.addEventListener("click", async () => {
-    let registrationData = document.querySelectorAll("form.register_form input")
     let data = Array.from(registrationData).reduce((data, e) => {
         if (!data[e.name]) {
             data[e.name] = e.value
@@ -80,7 +91,6 @@ registe_btn.addEventListener("click", async () => {
 })
 
 login_btn.addEventListener("click", async () => {
-    let loginData = document.querySelectorAll("form.login_form input")
     let data = Array.from(loginData).reduce((data, e) => {
         if (!data[e.name]) {
             data[e.name] = e.value
@@ -88,13 +98,25 @@ login_btn.addEventListener("click", async () => {
         return data
     }, {})
     let result = await setUser("PATCH", data)
-    console.log(result)
+    if (!result["ok"]) {
+        return login_form_message.textContent = result["msg"]
+    }
+
+    location.reload();
 })
+
+logout_tag.addEventListener("click", async () => {
+    let result = await setUser("DELETE")
+    if (result["ok"]) {
+        location.reload();
+    }
+})
+
 
 async function getUser() {
     return new Promise((resolve, reject) => {
-        let url = new URL('http://127.0.0.1:3000/api/user');
-        // let url = new URL('http://52.68.89.158:3000/api/user');
+        // let url = new URL('http://127.0.0.1:3000/api/user');
+        let url = new URL('http://52.68.89.158:3000/api/user');
 
         let xhr = new XMLHttpRequest();
         xhr.open("GET", url);
@@ -108,11 +130,11 @@ async function getUser() {
     })
 }
 
-function setUser(method, data) {
+function setUser(method, data = "") {
     return new Promise((resolve, reject) => {
         // let csrf = "{{ csrf_token() }}";
-        let url = new URL('http://127.0.0.1:3000/api/user');
-        // let url = new URL('http://52.68.89.158:3000/api/user');
+        // let url = new URL('http://127.0.0.1:3000/api/user');
+        let url = new URL('http://52.68.89.158:3000/api/user');
 
         let xhr = new XMLHttpRequest();
         xhr.open(method, url);

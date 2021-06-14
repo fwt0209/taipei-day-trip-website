@@ -140,7 +140,10 @@ def apiGetAttractionsByID(attractionId):
 
 @app.route("/api/user" , methods=["GET"])
 def apiGetUser():
+	print(request.cookies)
+	print(session)
 	output={}
+	
 	if 'email' in session:
 		userInfo={}
 		userInfo["id"]=session["id"]
@@ -194,30 +197,38 @@ def apiLogin():
 	output["ok"]=False
 	output["msg"]="帳號或密碼輸入錯誤"
 	data=request.json
-	# try:
-	if data['email']=="" or data['password']=="":
-		output["msg"]="資料輸入不完整，請再輸入一次"
+	try:
+		if data['email']=="" or data['password']=="":
+			output["msg"]="資料輸入不完整，請再輸入一次"
+			return json.dumps(output)
+
+		values["email"]=data['email']
+		password=data['password']
+		sql="SELECT * FROM user WHERE email=%(email)s"
+		mycursor.execute(sql,values)
+		result=mycursor.fetchone()
+		if not result:
+			return json.dumps(output)
+		if bcrypt.checkpw(password.encode("utf-8"), result["password"].encode("utf-8")):
+			session['id'] = result["id"]
+			session['name'] = result["name"]
+			session['email'] = values["email"]
+			output["ok"]=True
+			output["msg"]="登入成功"
+			return json.dumps(output)
+		return json.dumps(output)
+	except:
+		output["msg"]="伺服器內部發生錯誤"
 		return json.dumps(output)
 
-	values["email"]=data['email']
-	password=data['password']
-	sql="SELECT * FROM user WHERE email=%(email)s"
-	mycursor.execute(sql,values)
-	result=mycursor.fetchone()
-	if not result:
-		return json.dumps(output)
-	if bcrypt.checkpw(password.encode("utf-8"), result["password"].encode("utf-8")):
-		session['id'] = result["id"]
-		session['name'] = result["name"]
-		session['email'] = values["email"]
-		output["ok"]=True
-		output["msg"]="登入成功"
-		return json.dumps(output)
+@app.route('/api/user', methods=['DELETE'])
+def apiLogout():
+	output={}
+	session.pop('id', None)
+	session.pop('name', None)
+	session.pop('email', None)
+	output["ok"]=True
 	return json.dumps(output)
-	# except:
-	# 	output["msg"]="伺服器內部發生錯誤"
-	# 	return json.dumps(output)
-
 
 if __name__=="__main__":
   app.run(host="0.0.0.0", port="3000")
