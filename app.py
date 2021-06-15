@@ -197,29 +197,33 @@ def apiLogin():
 	output["ok"]=False
 	output["msg"]="帳號或密碼輸入錯誤"
 	data=request.json
-	# try:
-	if data['email']=="" or data['password']=="":
-		output["msg"]="資料輸入不完整，請再輸入一次"
-		return json.dumps(output)
+	try:
+		if data['email']=="" or data['password']=="":
+			output["msg"]="資料輸入不完整，請再輸入一次"
+			return json.dumps(output)
 
-	values["email"]=data['email']
-	password=data['password']
-	sql="SELECT * FROM user WHERE email=%(email)s"
-	mycursor.execute(sql,values)
-	result=mycursor.fetchone()
-	if not result:
+		values["email"]=data['email']
+		password=data['password']
+		sql="SELECT * FROM user WHERE email=%(email)s"
+		mycursor.execute(sql,values)
+		result=mycursor.fetchone()
+		if not result:
+			return json.dumps(output)
+		if bcrypt.checkpw(password.encode("utf-8"), result["password"].encode("utf-8")):
+			sql="UPDATE user SET counter=counter+1 WHERE email=%(email)s"
+			mycursor.execute(sql,values)
+			mydb.commit()
+			if not mycursor.rowcount==0:
+				session['id'] = result["id"]
+				session['name'] = result["name"]
+				session['email'] = values["email"]
+				output["ok"]=True
+				output["msg"]="登入成功"
+				return json.dumps(output)
 		return json.dumps(output)
-	if bcrypt.checkpw(password.encode("utf-8"), result["password"].encode("utf-8")):
-		session['id'] = result["id"]
-		session['name'] = result["name"]
-		session['email'] = values["email"]
-		output["ok"]=True
-		output["msg"]="登入成功"
+	except:
+		output["msg"]="伺服器內部發生錯誤"
 		return json.dumps(output)
-	return json.dumps(output)
-	# except:
-		# output["msg"]="伺服器內部發生錯誤"
-		# return json.dumps(output)
 
 @app.route('/api/user', methods=['DELETE'])
 def apiLogout():
